@@ -1,0 +1,9 @@
+{
+  "name": "Disha — AI Coach",
+  "short_name": "Disha",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0b1a",
+  "theme_color": "#0b0b1a",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

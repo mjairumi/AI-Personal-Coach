@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: disha-ai-coach
+    runtime: node
+    plan: free
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: BOLNA_API_KEY
+        sync: false
+      - key: BOLNA_AGENT_ID
+        value: acc0ced2-24b6-49f9-ac37-db3b0e0f43fc
+      - key: WEBHOOK_TOKEN
+        generateValue: true
+      - key: ANTHROPIC_API_KEY
+        sync: false

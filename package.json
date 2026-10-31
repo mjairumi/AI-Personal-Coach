@@ -1,0 +1,25 @@
+{
+  "name": "disha-ai-coach",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Disha — a voice-first AI life & career coach powered by Bolna Voice AI",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,web -c blue,magenta \"npm run dev -w @disha/server\" \"npm run dev -w @disha/web\"",
+    "build": "npm run build -w @disha/web",
+    "start": "npm run start -w @disha/server",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "setup:agent": "node bolna/create-agent.mjs"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
