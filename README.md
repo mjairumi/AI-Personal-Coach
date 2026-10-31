@@ -46,7 +46,7 @@ bolna/          Agent system prompt, agent config, create/update script
   1. Bolna `extracted_data` (if you add an extraction prompt in the Bolna dashboard; see `bolna/extraction-prompt.md`).
   2. An LLM pass over the transcript, if you set `GEMINI_API_KEY` (Google AI Studio), `ANTHROPIC_API_KEY` or `OPENAI_API_KEY`.
   3. Bolna's built-in call summary (enabled on the agent).
-- **Storage** is a JSON file behind a `Store` interface (`apps/server/src/store.ts`). Swap in Postgres or Supabase by implementing four methods.
+- **Storage** is PostgreSQL (e.g. **Neon**) when `DATABASE_URL` is set (`apps/server/src/pgStore.ts`), otherwise a local JSON file. The `coaching_sessions` table is created automatically on startup.
 - **Identity** is an anonymous device id (UUID in `localStorage`, sent as `X-User-Id`). Replace it with real auth before going beyond the MVP.
 
 ## Run locally
@@ -84,7 +84,13 @@ npm run build && npm start    # http://localhost:8787
 - **Render:** a `render.yaml` is included. Connect the repo, set `BOLNA_API_KEY`, and deploy.
   HTTPS is required for microphone access, and Render provides it.
 - **Docker:** `docker build -t disha . && docker run -p 8787:8787 --env-file .env disha`
-- The free-tier filesystem is ephemeral, so journal data resets on redeploy. Mount a disk (`DATA_FILE=/data/db.json`) or plug in a database.
+- Set `DATABASE_URL` to a Postgres database so journal data survives redeploys (Render's free-tier disk is wiped).
+
+### Neon (Postgres)
+
+1. Create a project at https://console.neon.tech.
+2. Click **Connect** and copy the connection string. The pooled one (`-pooler` in the host) is recommended. Keep `?sslmode=require`.
+3. Set it as `DATABASE_URL` locally in `.env` and on Render. The table is created on first start; `/api/health` should then report `"storage": "postgres"`.
 
 ## Mobile app (next)
 

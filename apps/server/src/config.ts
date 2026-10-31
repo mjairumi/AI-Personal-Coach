@@ -13,6 +13,7 @@ export const config = {
   geminiApiKey: process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY ?? "",
   anthropicApiKey: process.env.ANTHROPIC_API_KEY ?? "",
   openaiApiKey: process.env.OPENAI_API_KEY ?? "",
+  databaseUrl: process.env.DATABASE_URL ?? "",
   dataFile: process.env.DATA_FILE ?? path.resolve(here, "../data/db.json"),
   webDist: process.env.WEB_DIST ?? path.resolve(here, "../../web/dist"),
 };

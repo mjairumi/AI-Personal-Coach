@@ -62,3 +62,12 @@ export class JsonFileStore implements Store {
     }, 200);
   }
 }
+
+/** Postgres (e.g. Neon) when DATABASE_URL is set, otherwise the local JSON file. */
+export async function createStore(databaseUrl: string, dataFile: string): Promise<Store & { kind: string }> {
+  if (databaseUrl) {
+    const { PostgresStore } = await import("./pgStore.ts");
+    return Object.assign(new PostgresStore(databaseUrl), { kind: "postgres" });
+  }
+  return Object.assign(new JsonFileStore(dataFile), { kind: "json-file" });
+}

@@ -5,10 +5,10 @@ import cors from "cors";
 import { buildMemory, computeStats, getMode, isModeId, type CoachingSession } from "@disha/core";
 import { config, insightsProvider } from "./config.ts";
 import { BolnaError, mintWebCallSession } from "./bolna.ts";
-import { JsonFileStore } from "./store.ts";
+import { createStore } from "./store.ts";
 import { applyExecution, refreshSession } from "./sessions.ts";
 
-const store = new JsonFileStore(config.dataFile);
+const store = await createStore(config.databaseUrl, config.dataFile);
 const app = express();
 app.disable("x-powered-by");
 app.use(express.json({ limit: "2mb" }));
@@ -36,6 +36,7 @@ app.get("/api/health", (_req, res) => {
     ok: true,
     bolnaConfigured: Boolean(config.bolnaApiKey && config.bolnaAgentId),
     insightsProvider,
+    storage: store.kind,
   });
 });
 
@@ -204,5 +205,5 @@ app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
 app.listen(config.port, () => {
   console.log(`Disha server listening on http://localhost:${config.port}`);
   if (!config.bolnaApiKey || !config.bolnaAgentId) console.warn("⚠  BOLNA_API_KEY / BOLNA_AGENT_ID not set — voice sessions will fail.");
-  console.log(`Insights provider: ${insightsProvider}`);
+  console.log(`Insights provider: ${insightsProvider} · Storage: ${store.kind}`);
 });
