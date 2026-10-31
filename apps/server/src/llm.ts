@@ -9,6 +9,23 @@ export async function generateInsights(turns: TranscriptTurn[], goal: string): P
   if (insightsProvider === "bolna" || !turns.length) return null;
   const convo = `User's stated goal for the session: ${goal || "(not specified)"}\n\nConversation:\n${transcriptToText(turns)}`;
   try {
+    if (insightsProvider === "gemini") {
+      // Google AI Studio (Gemini API) key — https://aistudio.google.com/apikey
+      const model = process.env.INSIGHTS_MODEL || "gemini-2.5-flash";
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
+        method: "POST",
+        headers: { "x-goog-api-key": config.geminiApiKey, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: INSIGHTS_INSTRUCTIONS }] },
+          contents: [{ role: "user", parts: [{ text: convo }] }],
+          generationConfig: { responseMimeType: "application/json", temperature: 0.3 },
+        }),
+      });
+      if (!res.ok) throw new Error(`gemini ${res.status}: ${await res.text()}`);
+      const data: any = await res.json();
+      const text = (data.candidates?.[0]?.content?.parts ?? []).map((p: any) => p.text ?? "").join("");
+      return normalizeInsights(text, "llm");
+    }
     if (insightsProvider === "anthropic") {
       const res = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",

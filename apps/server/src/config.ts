@@ -10,10 +10,15 @@ export const config = {
   bolnaApiBase: (process.env.BOLNA_API_BASE ?? "https://api.bolna.ai").replace(/\/$/, ""),
   corsOrigins: (process.env.CORS_ORIGINS ?? "").split(",").map((s) => s.trim()).filter(Boolean),
   webhookToken: process.env.WEBHOOK_TOKEN ?? "",
+  geminiApiKey: process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY ?? "",
   anthropicApiKey: process.env.ANTHROPIC_API_KEY ?? "",
   openaiApiKey: process.env.OPENAI_API_KEY ?? "",
   dataFile: process.env.DATA_FILE ?? path.resolve(here, "../data/db.json"),
   webDist: process.env.WEB_DIST ?? path.resolve(here, "../../web/dist"),
 };
 
-export const insightsProvider = config.anthropicApiKey ? "anthropic" : config.openaiApiKey ? "openai" : "bolna";
+export const insightsProvider = config.geminiApiKey
+  ? "gemini"
+  : config.anthropicApiKey
+    ? "anthropic"
+    : config.openaiApiKey ? "openai" : "bolna";

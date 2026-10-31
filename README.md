@@ -44,7 +44,7 @@ bolna/          Agent system prompt, agent config, create/update script
 - **One agent, many personas.** `{user_name}`, `{coach_mode}`, `{mode_guidance}`, `{session_goal}`, `{memory}` are filled in per call.
 - **Post-call insights** come from the first available source, in this order:
   1. Bolna `extracted_data` (if you add an extraction prompt in the Bolna dashboard; see `bolna/extraction-prompt.md`).
-  2. An LLM pass over the transcript, if you set `ANTHROPIC_API_KEY` or `OPENAI_API_KEY`.
+  2. An LLM pass over the transcript, if you set `GEMINI_API_KEY` (Google AI Studio), `ANTHROPIC_API_KEY` or `OPENAI_API_KEY`.
   3. Bolna's built-in call summary (enabled on the agent).
 - **Storage** is a JSON file behind a `Store` interface (`apps/server/src/store.ts`). Swap in Postgres or Supabase by implementing four methods.
 - **Identity** is an anonymous device id (UUID in `localStorage`, sent as `X-User-Id`). Replace it with real auth before going beyond the MVP.
@@ -77,7 +77,7 @@ npm run build && npm start    # http://localhost:8787
 3. **Webhook (optional, recommended in production).** Set the agent's webhook URL to
    `https://<your-host>/api/webhooks/bolna?token=<WEBHOOK_TOKEN>`. Without it, the app polls `GET /executions/:id`, which works fine for the MVP.
 4. **Richer insights (optional).** Either add an extraction prompt (`bolna/extraction-prompt.md`) in the agent's Analytics tab,
-   or set `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` on the server.
+   or set `GEMINI_API_KEY` (Google AI Studio), `ANTHROPIC_API_KEY` or `OPENAI_API_KEY` on the server.
 
 ## Deploy
 
